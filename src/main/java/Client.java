@@ -10,25 +10,18 @@ import java.util.ArrayList;
 
 public class Client {
 
-    private EnvironmentProperties properties;
-
-    public Client(EnvironmentProperties properties) {
-       this.properties = properties;
-    }
-
-    public String post(String absolutePathToCv) {
+    public String post(Request request) {
         ProcessDocumentImplService service = new ProcessDocumentImplService();
         ProcessDocumentInterface processDocumentImplPort = service.getProcessDocumentImplPort();
 
-        Path originalCvPath = Paths.get(absolutePathToCv);
+        Path originalCvPath = Paths.get(request.pathToCv());
 
-        System.out.println(originalCvPath.toAbsolutePath());
         try {
             String response = processDocumentImplPort.processDocument(
-                    properties.getAccountName(),
-                    properties.getUserName(),
-                    properties.getPassword(),
-                    originalCvPath.getFileName().toString(),
+                    request.accountName(),
+                    request.userName(),
+                    request.password(),
+                    request.pathToCv(),
                     Files.readAllBytes(originalCvPath),
                     new byte[0],
                     new byte[0],
