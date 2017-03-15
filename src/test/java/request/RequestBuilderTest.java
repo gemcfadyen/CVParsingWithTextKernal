@@ -1,5 +1,9 @@
+package request;
+
 import org.junit.Assert;
 import org.junit.Test;
+import request.Request;
+import request.RequestBuilder;
 
 public class RequestBuilderTest {
 

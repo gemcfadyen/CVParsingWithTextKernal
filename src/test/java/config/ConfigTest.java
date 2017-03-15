@@ -1,3 +1,7 @@
+package config;
+
+import config.EnvironmentProperties;
+import exceptions.InvalidPropertyFileException;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -31,7 +35,7 @@ public class ConfigTest {
         assertEquals("test-password", environmentProperties.getPassword());
     }
 
-    @Test(expected=InvalidPropertyFileException.class)
+    @Test(expected= InvalidPropertyFileException.class)
     public void exceptionThrownWhenPropertyFileDoesntExist() {
         new EnvironmentProperties("non-existing-filename");
     }

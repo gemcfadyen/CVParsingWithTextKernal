@@ -1,3 +1,5 @@
+package request;
+
 public class Request {
     private String pathToCv;
     private String accountName;

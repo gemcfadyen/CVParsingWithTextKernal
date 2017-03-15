@@ -1,3 +1,5 @@
+import request.Request;
+
 public class FakeDocumentService implements DocumentService {
 
     private int executeInvoked = 0;

@@ -1,4 +1,8 @@
+import exceptions.ClientException;
+import exceptions.DocumentServiceException;
 import org.junit.Test;
+import request.Request;
+import request.RequestBuilder;
 
 import static org.junit.Assert.assertEquals;
 

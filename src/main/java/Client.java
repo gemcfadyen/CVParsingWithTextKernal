@@ -1,3 +1,7 @@
+import exceptions.ClientException;
+import exceptions.DocumentServiceException;
+import request.Request;
+
 public class Client {
 
     private final DocumentService processDocumentService;

@@ -1,6 +1,8 @@
+import exceptions.DocumentServiceException;
 import nl.textkernel.home.sourcebox.soap.documentprocessor.ProcessDocumentException_Exception;
 import nl.textkernel.home.sourcebox.soap.documentprocessor.ProcessDocumentImplService;
 import nl.textkernel.home.sourcebox.soap.documentprocessor.ProcessDocumentInterface;
+import request.Request;
 
 import java.io.IOException;
 import java.nio.file.Files;

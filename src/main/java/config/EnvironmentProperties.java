@@ -1,3 +1,7 @@
+package config;
+
+import exceptions.InvalidPropertyFileException;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
