@@ -1,106 +1,78 @@
 package parsing;
 
-import parsing.Client;
-import parsing.ProcessDocumentService;
+import org.junit.Test;
 import parsing.config.EnvironmentProperties;
 import parsing.exceptions.ClientException;
-import org.junit.Test;
 import parsing.request.Request;
-import parsing.request.RequestBuilder;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
+import static parsing.request.RequestBuilder.aRequestBuilder;
 
 public class ClientIntegrationTest {
 
     @Test
     public void callsPostWithCvInDocForm() {
-        EnvironmentProperties prodProperties = new EnvironmentProperties("src/main/resources/prod.properties");
         Client client = new Client(new ProcessDocumentService());
+        Request request = buildRequestForCv("src/test/resources/standardCv.doc");
 
-        Request request = RequestBuilder.aRequestBuilder()
-                .withAbsolutePathToCv("src/test/resources/standardCv.doc")
-                .withAccountName(prodProperties.getAccountName())
-                .withUserName(prodProperties.getUserName())
-                .withPassword(prodProperties.getPassword())
-                .build();
         String response = client.post(request);
 
-        assertThat(response, containsString("<Personal>"));
-        assertThat(response, containsString("<EducationHistory>"));
-        assertThat(response, containsString("<EmploymentHistory>"));
+        assertCvHasBeenParsed(response);
     }
 
     @Test
     public void callsPostWithCvInPdfForm() {
-        EnvironmentProperties prodProperties = new EnvironmentProperties("src/main/resources/prod.properties");
         Client client = new Client(new ProcessDocumentService());
-
-        Request request = RequestBuilder.aRequestBuilder()
-                .withAbsolutePathToCv("src/test/resources/linkedIn.pdf")
-                .withAccountName(prodProperties.getAccountName())
-                .withUserName(prodProperties.getUserName())
-                .withPassword(prodProperties.getPassword())
-                .build();
+        Request request = buildRequestForCv("src/test/resources/linkedIn.pdf");
 
         String response = client.post(request);
 
-        assertThat(response, containsString("<Personal>"));
-        assertThat(response, containsString("<EducationHistory>"));
-        assertThat(response, containsString("<EmploymentHistory>"));
+        assertCvHasBeenParsed(response);
     }
 
     @Test
     public void callsPostWithUnstructuredCv() {
-        EnvironmentProperties prodProperties = new EnvironmentProperties("src/main/resources/prod.properties");
         Client client = new Client(new ProcessDocumentService());
-
-        Request request = RequestBuilder.aRequestBuilder()
-                .withAbsolutePathToCv("src/test/resources/unstructured.pdf")
-                .withAccountName(prodProperties.getAccountName())
-                .withUserName(prodProperties.getUserName())
-                .withPassword(prodProperties.getPassword())
-                .build();
+        Request request = buildRequestForCv("src/test/resources/unstructured.pdf");
 
         String response = client.post(request);
 
-        assertThat(response, containsString("<Personal>"));
-        assertThat(response, containsString("<EducationHistory>"));
-        assertThat(response, containsString("<EmploymentHistory>"));
+        assertCvHasBeenParsed(response);
     }
 
     @Test
     public void documentWithSentenceParsed() {
-        EnvironmentProperties prodProperties = new EnvironmentProperties("src/main/resources/prod.properties");
         Client client = new Client(new ProcessDocumentService());
-
-        Request request = RequestBuilder.aRequestBuilder()
-                .withAbsolutePathToCv("src/test/resources/blank.doc")
-                .withAccountName(prodProperties.getAccountName())
-                .withUserName(prodProperties.getUserName())
-                .withPassword(prodProperties.getPassword())
-                .build();
+        Request request = buildRequestForCv("src/test/resources/blank.doc");
 
         String response = client.post(request);
 
-        assertThat(response, containsString("<Personal>"));
-        assertThat(response, containsString("<EducationHistory>"));
-        assertThat(response, containsString("<EmploymentHistory>"));
+        assertCvHasBeenParsed(response);
     }
 
     @Test(expected= ClientException.class)
     public void exceptionThrownWhenBlankDocumentParsed() {
-        EnvironmentProperties prodProperties = new EnvironmentProperties("src/main/resources/prod.properties");
         Client client = new Client(new ProcessDocumentService());
-
-        Request request = RequestBuilder.aRequestBuilder()
-                .withAbsolutePathToCv("src/test/resources/blank.pdf")
-                .withAccountName(prodProperties.getAccountName())
-                .withUserName(prodProperties.getUserName())
-                .withPassword(prodProperties.getPassword())
-                .build();
+        Request request = buildRequestForCv("src/test/resources/blank.pdf");
 
         client.post(request);
     }
 
+    private Request buildRequestForCv(String pathToCv) {
+        EnvironmentProperties prodProperties = new EnvironmentProperties("src/main/resources/prod.properties");
+
+        return aRequestBuilder()
+                .withAbsolutePathToCv(pathToCv)
+                .withAccountName(prodProperties.getAccountName())
+                .withUserName(prodProperties.getUserName())
+                .withPassword(prodProperties.getPassword())
+                .build();
+    }
+
+    private void assertCvHasBeenParsed(String response) {
+        assertThat(response, containsString("<Personal>"));
+        assertThat(response, containsString("<EducationHistory>"));
+        assertThat(response, containsString("<EmploymentHistory>"));
+    }
 }

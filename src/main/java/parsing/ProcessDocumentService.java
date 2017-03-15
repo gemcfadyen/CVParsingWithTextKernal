@@ -31,7 +31,6 @@ public class ProcessDocumentService implements DocumentService {
                      new ArrayList<>()
              );
         } catch (ProcessDocumentException_Exception | IOException e) {
-            e.printStackTrace();
             throw new DocumentServiceException();
         }
     }
