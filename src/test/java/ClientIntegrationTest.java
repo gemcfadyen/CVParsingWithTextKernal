@@ -3,12 +3,12 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
-public class HttpClientTest {
+public class ClientIntegrationTest {
 
     @Test
     public void callsPostWithCvInDocForm() {
         EnvironmentProperties prodProperties = new EnvironmentProperties("src/test/resources/prod.properties");
-        Client client = new Client();
+        Client client = new Client(new ProcessDocumentService());
 
         Request request = RequestBuilder.aRequestBuilder()
                 .withAbsolutePathToCv("src/test/resources/TimBucksCv.doc")
@@ -26,10 +26,29 @@ public class HttpClientTest {
     @Test
     public void callsPostWithCvInPdfForm() {
         EnvironmentProperties prodProperties = new EnvironmentProperties("src/test/resources/prod.properties");
-        Client client = new Client();
+        Client client = new Client(new ProcessDocumentService());
 
         Request request = RequestBuilder.aRequestBuilder()
-                .withAbsolutePathToCv("src/test/resources/dipaksCv.pdf")
+                .withAbsolutePathToCv("src/test/resources/linkedIn.pdf")
+                .withAccountName(prodProperties.getAccountName())
+                .withUserName(prodProperties.getUserName())
+                .withPassword(prodProperties.getPassword())
+                .build();
+
+        String response = client.post(request);
+
+        assertThat(response, containsString("<Personal>"));
+        assertThat(response, containsString("<EducationHistory>"));
+        assertThat(response, containsString("<EmploymentHistory>"));
+    }
+
+    @Test
+    public void callsPostWithUnstructuredCv() {
+        EnvironmentProperties prodProperties = new EnvironmentProperties("src/test/resources/prod.properties");
+        Client client = new Client(new ProcessDocumentService());
+
+        Request request = RequestBuilder.aRequestBuilder()
+                .withAbsolutePathToCv("src/test/resources/unstructured.pdf")
                 .withAccountName(prodProperties.getAccountName())
                 .withUserName(prodProperties.getUserName())
                 .withPassword(prodProperties.getPassword())
