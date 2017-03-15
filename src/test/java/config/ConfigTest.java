@@ -1,8 +1,8 @@
 package config;
 
-import config.EnvironmentProperties;
 import exceptions.InvalidPropertyFileException;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 public class ConfigTest {

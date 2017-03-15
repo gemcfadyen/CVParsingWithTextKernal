@@ -27,3 +27,10 @@ password=<password from TextKernal>
 ```
 
 This will be required to successfully run the `ClientIntegrationTest`.
+
+
+To build the project
+- gradle build
+
+To run the tests
+- gradle test

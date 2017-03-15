@@ -1,4 +1,5 @@
 import config.EnvironmentProperties;
+import exceptions.ClientException;
 import org.junit.Test;
 import request.Request;
 import request.RequestBuilder;
@@ -14,7 +15,7 @@ public class ClientIntegrationTest {
         Client client = new Client(new ProcessDocumentService());
 
         Request request = RequestBuilder.aRequestBuilder()
-                .withAbsolutePathToCv("src/test/resources/TimBucksCv.doc")
+                .withAbsolutePathToCv("src/test/resources/standardCv.doc")
                 .withAccountName(prodProperties.getAccountName())
                 .withUserName(prodProperties.getUserName())
                 .withPassword(prodProperties.getPassword())
@@ -63,4 +64,39 @@ public class ClientIntegrationTest {
         assertThat(response, containsString("<EducationHistory>"));
         assertThat(response, containsString("<EmploymentHistory>"));
     }
+
+    @Test
+    public void documentWithSentenceParsed() {
+        EnvironmentProperties prodProperties = new EnvironmentProperties("src/main/resources/prod.properties");
+        Client client = new Client(new ProcessDocumentService());
+
+        Request request = RequestBuilder.aRequestBuilder()
+                .withAbsolutePathToCv("src/test/resources/blank.doc")
+                .withAccountName(prodProperties.getAccountName())
+                .withUserName(prodProperties.getUserName())
+                .withPassword(prodProperties.getPassword())
+                .build();
+
+        String response = client.post(request);
+
+        assertThat(response, containsString("<Personal>"));
+        assertThat(response, containsString("<EducationHistory>"));
+        assertThat(response, containsString("<EmploymentHistory>"));
+    }
+
+    @Test(expected= ClientException.class)
+    public void exceptionThrownWhenBlankDocumentParsed() {
+        EnvironmentProperties prodProperties = new EnvironmentProperties("src/main/resources/prod.properties");
+        Client client = new Client(new ProcessDocumentService());
+
+        Request request = RequestBuilder.aRequestBuilder()
+                .withAbsolutePathToCv("src/test/resources/blank.pdf")
+                .withAccountName(prodProperties.getAccountName())
+                .withUserName(prodProperties.getUserName())
+                .withPassword(prodProperties.getPassword())
+                .build();
+
+        client.post(request);
+    }
+
 }
