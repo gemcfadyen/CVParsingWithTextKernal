@@ -26,7 +26,7 @@ userName=<user name from TextKernal>
 password=<password from TextKernal>
 ```
 
-This will be required to successfully run the `ClientIntegrationTest`.
+This will be required to successfully run the `parsing.ClientIntegrationTest`.
 
 
 To build the project
