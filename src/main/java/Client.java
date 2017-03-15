@@ -1,12 +1,8 @@
-import nl.textkernel.home.sourcebox.soap.documentprocessor.ProcessDocumentException_Exception;
-
-import java.io.IOException;
-
 public class Client {
 
-    private final ProcessDocumentService processDocumentService;
+    private final DocumentService processDocumentService;
 
-    public Client(ProcessDocumentService processDocumentService) {
+    public Client(DocumentService processDocumentService) {
         this.processDocumentService = processDocumentService;
     }
 
@@ -14,10 +10,8 @@ public class Client {
 
         try {
             return processDocumentService.executeWith(request);
-        } catch (ProcessDocumentException_Exception | IOException e) {
-            e.printStackTrace();
+        } catch (DocumentServiceException documentServiceException) {
+            throw new ClientException();
         }
-
-        return "yo";
     }
 }
